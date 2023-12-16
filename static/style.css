@@ -1,0 +1,170 @@
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.container {
+  max-width: 800px;
+  margin: 50px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.queue-section {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.queue {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  min-height: 50px;
+}
+.q-container h3 {
+  color: crimson;
+}
+.controls-section {
+  margin-top: 20px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.process {
+  background-color: #e0e0e0;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.log-section {
+  margin-top: 20px;
+}
+
+#log-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+#log-table th,
+#log-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+#log-table th {
+  background-color: #f2f2f2;
+}
+
+button {
+  margin-top: 10px;
+  padding: 0.6rem 4rem;
+  cursor: pointer;
+}
+#btn-enq {
+  background-color: forestgreen;
+  border: none;
+  color: #f2f2f2;
+}
+
+#btn-dq {
+  background-color: crimson;
+  border: none;
+  color: #f2f2f2;
+}
+
+/* ... (unchanged code) */
+
+.visualization-section {
+  margin-top: 20px;
+}
+
+#visualization {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.queue-visual {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-right: 10px;
+  min-height: 50px;
+}
+
+.waiting-times-visual {
+  border: 1px solid #ddd;
+  padding: 10px;
+  min-height: 50px;
+}
+
+.process-visual {
+  background-color: #e0e0e0;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+/* ... (unchanged code) */
+
+.seconds-indicator {
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  margin-top: 10px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Add new CSS rules for waiting times */
+.process-visual {
+  position: relative;
+  background-color: #e0e0e0;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.waiting-time {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 10px;
+  color: #555;
+}
+
+#process-input {
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.3rem;
+}
+#priority-select {
+  padding: 0.6rem 4rem;
+  margin-left: 1rem;
+}
+.button-ctrl {
+  padding: 0.6rem 4rem;
+}

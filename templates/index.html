@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <title>Multilevel Queue Scheduling</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Multilevel Queue Scheduling</h1>
+
+      <div class="queue-section">
+        <h2>Queues</h2>
+        <div class="q-container">
+          <h3>High</h3>
+          <div id="high-queue" class="queue"></div>
+        </div>
+
+        <div class="q-container">
+          <h3>Medium</h3>
+          <div id="medium-queue" class="queue"></div>
+        </div>
+
+        <div class="q-container">
+          <h3>Low</h3>
+          <div id="low-queue" class="queue"></div>
+        </div>
+      </div>
+
+      <div class="controls-section">
+        <h2>Controls</h2>
+        <div>
+          <label for="process-input">Process:</label>
+          <input
+            type="text"
+            id="process-input"
+            placeholder="Enter process name"
+          />
+        </div>
+        <div>
+          <label for="priority-select">Priority:</label>
+          <select id="priority-select" class="priority-select-dd">
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+        <button onclick="enqueueProcess()" id="btn-enq">Enqueue</button>
+        <button onclick="dequeueProcess()" id="btn-dq">Dequeue</button>
+      </div>
+    </div>
+
+    <script>
+      function enqueueProcess() {
+        const processInput = $("#process-input");
+        const prioritySelect = $("#priority-select");
+
+        const process = processInput.val();
+        const priority = prioritySelect.val();
+
+        if (process) {
+          $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/enqueue",
+            data: JSON.stringify({ process, priority }),
+            success: function (response) {
+              processInput.val("");
+              updateQueues();
+            },
+          });
+        }
+      }
+
+      function dequeueProcess() {
+        $.ajax({
+          type: "GET",
+          url: "/dequeue",
+          success: function (response) {
+            if (response.process) {
+              alert(`Dequeued process: ${response.process}`);
+              updateQueues();
+            } else {
+              alert("No process to dequeue");
+            }
+          },
+        });
+      }
+
+      function updateQueues() {
+        $.get("/queues", function (response) {
+          displayQueue("high", response.high);
+          displayQueue("medium", response.medium);
+          displayQueue("low", response.low);
+          displayWaitingTimes(response.waiting_times);
+          displayRealTimeSeconds();
+          displayPriorityBoostLog(response.priority_boost_log);
+        });
+      }
+
+      function displayPriorityBoostLog(log) {
+        const priorityBoostLogElement = $("#priority-boost-log");
+        priorityBoostLogElement.empty();
+        log.forEach((boost) => {
+          priorityBoostLogElement.append(
+            `<div class="boost-log">${boost}</div>`
+          );
+        });
+      }
+
+      function displayRealTimeSeconds() {
+        const secondsIndicator = $("#seconds-indicator");
+        const seconds = new Date().getSeconds();
+        secondsIndicator.text(`${seconds}s`);
+      }
+
+      function displayQueue(queueId, processes) {
+        const queueElement = $(`#${queueId}-queue`);
+        queueElement.empty();
+        processes.forEach((process) => {
+          queueElement.append(
+            `<div class="process">${process.process} (${process.waiting_time}s)</div>`
+          );
+        });
+      }
+
+      function displayWaitingTimes(waitingTimes) {
+        const waitingTimesElement = $("#waiting-times");
+        waitingTimesElement.empty();
+        for (const process in waitingTimes) {
+          waitingTimesElement.append(
+            `<div class="waiting-time">${process}: ${waitingTimes[process]}</div>`
+          );
+        }
+      }
+
+      function updateRealTimeWaitingTimes() {
+        setInterval(function () {
+          $.get("/waiting_times", function (response) {
+            displayWaitingTimes(response);
+          });
+        }, 1000); // Update every 1 second
+      }
+
+      // Call the displayRealTimeSeconds function every second
+      setInterval(function () {
+        displayRealTimeSeconds();
+      }, 1000);
+
+      $(document).ready(function () {
+        updateQueues();
+        //updateRealTimeWaitingTimes();
+      });
+    </script>
+  </body>
+</html>
